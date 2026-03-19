@@ -1,7 +1,5 @@
 using UnityEngine;
-using UnityEngine.InputSystem;
-using UnityEngine.InputSystem.XR;
-using UnityEngine.Windows;
+
 
 public class Player : MonoBehaviour
 {
@@ -25,8 +23,8 @@ public class Player : MonoBehaviour
     private float _targetRotation = 0.0f;
     private float _rotationVelocity;
     private float _verticalVelocity;
-    private float _terminalVelocity = 53.0f;
-    private bool rotateOnMove = true;
+    //private float _terminalVelocity = 53.0f;
+    private bool rotateOnMove = false;
 
     private CharacterController _controller;
     Camera _mainCamera;
@@ -42,7 +40,6 @@ public class Player : MonoBehaviour
 
     private void Update()
     {
-        Debug.Log(GameInput.Instance.GetInputVectorNormalized());
         Move();
     }
 
