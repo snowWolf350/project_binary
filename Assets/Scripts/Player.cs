@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Windows;
 
 
 public class Player : MonoBehaviour
@@ -17,6 +18,25 @@ public class Player : MonoBehaviour
     [Tooltip("Acceleration and deceleration")]
     public float SpeedChangeRate = 10.0f;
 
+    [Tooltip("How far in degrees can you move the camera up")]
+    public float TopClamp = 70.0f;
+
+    [Tooltip("How far in degrees can you move the camera down")]
+    public float BottomClamp = -30.0f;
+
+    [Tooltip("Additional degress to override the camera. Useful for fine tuning camera position when locked")]
+    public float CameraAngleOverride = 0.0f;
+
+    [Tooltip("For locking the camera position on all axis")]
+    public bool LockCameraPosition = false;
+
+    // cinemachine
+    [SerializeField] GameObject CinemachineCameraTarget;
+    private float _cinemachineTargetYaw;
+    private float _cinemachineTargetPitch;
+    private float _mouseSensitivity =0.5f;
+    private const float _threshold = 0.01f;
+
     //player
     private float _speed;
     private float _animationBlend;
@@ -24,7 +44,7 @@ public class Player : MonoBehaviour
     private float _rotationVelocity;
     private float _verticalVelocity;
     //private float _terminalVelocity = 53.0f;
-    private bool rotateOnMove = false;
+    private bool rotateOnMove = true;
 
     private CharacterController _controller;
     Camera _mainCamera;
@@ -41,6 +61,11 @@ public class Player : MonoBehaviour
     private void Update()
     {
         Move();
+        
+    }
+    private void LateUpdate()
+    {
+        CameraRotation();
     }
 
     private void Move()
@@ -108,6 +133,30 @@ public class Player : MonoBehaviour
         // update animator if using character
         //_animator.SetFloat(_animIDSpeed, _animationBlend);
         //_animator.SetFloat(_animIDMotionSpeed, inputMagnitude);
+    }
+
+    private void CameraRotation()
+    {
+        // if there is an input and camera position is not fixed
+        if (_gameInput.GetMouseDelta().sqrMagnitude >= _threshold)
+        {
+            _cinemachineTargetYaw += _gameInput.GetMouseDelta().x * _mouseSensitivity;
+            _cinemachineTargetPitch -= _gameInput.GetMouseDelta().y* _mouseSensitivity;
+        }
+
+        // clamp our rotations so our values are limited 360 degrees
+        _cinemachineTargetYaw = ClampAngle(_cinemachineTargetYaw, float.MinValue, float.MaxValue);
+        _cinemachineTargetPitch = ClampAngle(_cinemachineTargetPitch, BottomClamp, TopClamp);
+
+        // Cinemachine will follow this target
+        CinemachineCameraTarget.transform.rotation = Quaternion.Euler(_cinemachineTargetPitch + CameraAngleOverride,
+            _cinemachineTargetYaw, 0.0f);
+    }
+    private static float ClampAngle(float lfAngle, float lfMin, float lfMax)
+    {
+        if (lfAngle < -360f) lfAngle += 360f;
+        if (lfAngle > 360f) lfAngle -= 360f;
+        return Mathf.Clamp(lfAngle, lfMin, lfMax);
     }
 
 }

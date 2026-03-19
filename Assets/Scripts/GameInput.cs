@@ -19,12 +19,14 @@ public class GameInput : MonoBehaviour
     {
         _playerInput.player.move.Enable();
         _playerInput.player.sprint.Enable();
+        _playerInput.player.look.Enable();
     }
 
     private void Start()
     {
         _playerInput.player.sprint.performed += Sprint_performed;
         _playerInput.player.sprint.canceled += Sprint_canceled;
+        Cursor.lockState = CursorLockMode.Locked;
     }
 
     private void Sprint_canceled(InputAction.CallbackContext obj)
@@ -42,6 +44,11 @@ public class GameInput : MonoBehaviour
         Vector2 MoveInputVector = _playerInput.player.move.ReadValue<Vector2>();
 
         return new Vector3(MoveInputVector.x,0,MoveInputVector.y).normalized;
+    }
+    public Vector2 GetMouseDelta()
+    {
+        Vector2 MoveDelVector = _playerInput.player.look.ReadValue<Vector2>();
+        return MoveDelVector;
     }
 
     public bool PlayerIsSprinting()
