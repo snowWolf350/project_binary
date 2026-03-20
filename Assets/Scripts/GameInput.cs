@@ -1,9 +1,12 @@
+using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class GameInput : MonoBehaviour
 {
     public static GameInput Instance;
+
+    public event EventHandler onPlayerJumped;
 
     PlayerInput _playerInput;
 
@@ -20,13 +23,20 @@ public class GameInput : MonoBehaviour
         _playerInput.player.move.Enable();
         _playerInput.player.sprint.Enable();
         _playerInput.player.look.Enable();
+        _playerInput.player.jump.Enable();
     }
 
     private void Start()
     {
         _playerInput.player.sprint.performed += Sprint_performed;
         _playerInput.player.sprint.canceled += Sprint_canceled;
+        _playerInput.player.jump.performed += Jump_performed;
         Cursor.lockState = CursorLockMode.Locked;
+    }
+
+    private void Jump_performed(InputAction.CallbackContext obj)
+    {
+        onPlayerJumped?.Invoke(this, EventArgs.Empty);
     }
 
     private void Sprint_canceled(InputAction.CallbackContext obj)
