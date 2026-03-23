@@ -4,6 +4,8 @@ using UnityEngine.Windows;
 
 public class Player : MonoBehaviour
 {
+    public static Player Instance { get; private set; }
+
     [Header("Player")]
     [Tooltip("Move speed of the character in m/s")]
     public float MoveSpeed = 2.0f;
@@ -83,6 +85,11 @@ public class Player : MonoBehaviour
 
     GameInput _gameInput;
 
+    private void Awake()
+    {
+        Instance = this;
+    }
+
     private void Start()
     {
         _controller = GetComponent<CharacterController>();
@@ -94,10 +101,14 @@ public class Player : MonoBehaviour
 
     private void Update()
     {
-        Move();
-        GroundedCheck();
-        JumpAndGravity();
-        
+        if (!GameManager.Instance.GameIsPlaying())
+        {
+            _animator.SetBool("isWalking", false);
+            return;
+        }
+            Move();
+            GroundedCheck();
+            JumpAndGravity(); 
     }
     private void LateUpdate()
     {

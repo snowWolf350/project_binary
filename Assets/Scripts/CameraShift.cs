@@ -1,0 +1,15 @@
+using System.Collections;
+using Unity.Cinemachine;
+using UnityEngine;
+using UnityEngine.Events;
+
+public class CameraShift : MonoBehaviour
+{
+    [SerializeField] CinemachineCamera playerCam;
+    
+    public void SwitchCameraTo(CinemachineCamera targetCam)
+    {
+        playerCam.Priority = 5;
+        targetCam.Priority = 20;
+    }
+}

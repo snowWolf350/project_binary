@@ -13,12 +13,15 @@ public class dialogueTrigger : MonoBehaviour
 
     public IEnumerator StartDialogue(DialogueSO dialogueSO)
     {
+        GameManager.Instance.SetGameIsDialogue();
         foreach (Dialogue d in dialogueSO.dialogueArray)
         {
             DialogueManager.Instance.StartDialouge(d);
             yield return new WaitUntil(() => DialogueManager.Instance.DialogueIsDone());
 
         }
+        GameManager.Instance.SetGameIsPlaying();
+        Destroy(gameObject);
     }
 
     private void OnTriggerEnter(Collider other)
