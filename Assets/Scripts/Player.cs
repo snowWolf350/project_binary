@@ -66,12 +66,12 @@ public class Player : MonoBehaviour
 
     //player
     private float _speed;
-    private float _animationBlend;
     private float _targetRotation = 0.0f;
     private float _rotationVelocity;
     private float _verticalVelocity;
     private float _terminalVelocity = 53.0f;
     private bool rotateOnMove = true;
+    [SerializeField] Animator _animator;
 
 
     // timeout deltatime
@@ -136,10 +136,6 @@ public class Player : MonoBehaviour
         {
             _speed = targetSpeed;
         }
-
-        _animationBlend = Mathf.Lerp(_animationBlend, targetSpeed, Time.deltaTime * SpeedChangeRate);
-        if (_animationBlend < 0.01f) _animationBlend = 0f;
-
         // normalise input direction
         Vector3 inputDirection = _gameInput.GetInputVectorNormalized();
 
@@ -147,6 +143,7 @@ public class Player : MonoBehaviour
         // if there is a move input rotate player when the player is moving
         if (_gameInput.GetInputVectorNormalized() != Vector3.zero)
         {
+            _animator.SetBool("isWalking", true);
             _targetRotation = Mathf.Atan2(inputDirection.x, inputDirection.z) * Mathf.Rad2Deg +
                               _mainCamera.transform.eulerAngles.y;
             float rotation = Mathf.SmoothDampAngle(transform.eulerAngles.y, _targetRotation, ref _rotationVelocity,
@@ -158,9 +155,13 @@ public class Player : MonoBehaviour
                 transform.rotation = Quaternion.Euler(0.0f, rotation, 0.0f);
             }
         }
+        else
+        {
+            _animator.SetBool("isWalking", false);
+        }
 
 
-        Vector3 targetDirection = Quaternion.Euler(0.0f, _targetRotation, 0.0f) * Vector3.forward;
+            Vector3 targetDirection = Quaternion.Euler(0.0f, _targetRotation, 0.0f) * Vector3.forward;
 
         // move the player
         _controller.Move(targetDirection.normalized * (_speed * Time.deltaTime) +
