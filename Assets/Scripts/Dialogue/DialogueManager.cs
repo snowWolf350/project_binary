@@ -10,11 +10,12 @@ public class DialogueManager : MonoBehaviour
 
     [SerializeField] TextMeshProUGUI _nameText;
     [SerializeField] TextMeshProUGUI _dialougeText;
+    [SerializeField] Image _characterImage;
     [SerializeField] Image _speakerImage;
     [SerializeField] Animator _animator;
     bool _dialogueon;
     bool _dialogueDone = false;
-    float _typingSpeed = 0.05f;
+    float _typingSpeed = 0.02f;
 
 
     private Queue<string> _sentencesQueue;
@@ -43,6 +44,7 @@ public class DialogueManager : MonoBehaviour
         _animator.SetBool("isOpen", true);
 
         _nameText.text = dialouge.speakerName;
+        _characterImage.sprite = dialouge.speakerImage;
         _sentencesQueue.Clear();
 
         foreach (string sentence in dialouge.speakerText)

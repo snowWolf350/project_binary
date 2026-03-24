@@ -10,15 +10,16 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 60d06fa1a544c7e4bb0dad6ea5070663, type: 3}
-  m_Name: tut_1
+  m_Name: tut_1_dialogue
   m_EditorClassIdentifier: Assembly-CSharp::DialogueSO
   dialogueArray:
-  - speakerImage: {fileID: 0}
+  - speakerImage: {fileID: 21300000, guid: decee0fbe0141b145873be624715faef, type: 3}
     speakerName: operator
     speakerText:
-    - 'hi '
-    - yayyyy
-  - speakerImage: {fileID: 0}
-    speakerName: player
+    - Hello Scrapper.
+    - Have you reached the entrance.
+  - speakerImage: {fileID: 21300000, guid: 7c710335dd771014da62686ec617c642, type: 3}
+    speakerName: Scrapper
     speakerText:
-    - yay indeed my friend
+    - Im almost there.
+    - If im not wrong it should be through that pipe.

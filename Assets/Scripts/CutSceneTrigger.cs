@@ -7,8 +7,14 @@ public class CutSceneTrigger : MonoBehaviour
     
     BoxCollider _collider;
 
+    private void Start()
+    {
+        _collider = GetComponent<BoxCollider>();    
+    }
+
     private void OnTriggerEnter(Collider other)
     {
         _cutScene.Play();
+        _collider.enabled = false;
     }
 }

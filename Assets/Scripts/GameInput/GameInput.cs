@@ -7,6 +7,7 @@ public class GameInput : MonoBehaviour
     public static GameInput Instance;
 
     public event EventHandler onPlayerJumped;
+    public event EventHandler onPlayerInteract;
 
     PlayerInput _playerInput;
 
@@ -25,6 +26,7 @@ public class GameInput : MonoBehaviour
         _playerInput.player.look.Enable();
         _playerInput.player.jump.Enable();
         _playerInput.player.nextDialogue.Enable();
+        _playerInput.player.interact.Enable();
     }
 
     private void Start()
@@ -33,7 +35,13 @@ public class GameInput : MonoBehaviour
         _playerInput.player.sprint.canceled += Sprint_canceled;
         _playerInput.player.jump.performed += Jump_performed;
         _playerInput.player.nextDialogue.performed += NextDialogue_performed;
+        _playerInput.player.interact.performed += Interact_performed;
         Cursor.lockState = CursorLockMode.Locked;
+    }
+
+    private void Interact_performed(InputAction.CallbackContext obj)
+    {
+        onPlayerInteract?.Invoke(this,EventArgs.Empty);
     }
 
     private void NextDialogue_performed(InputAction.CallbackContext obj)

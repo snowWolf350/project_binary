@@ -136,6 +136,15 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""interact"",
+                    ""type"": ""Button"",
+                    ""id"": ""dce10b69-f5e6-48fb-bc67-af007d23c0fe"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -292,6 +301,17 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                     ""action"": ""nextDialogue"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""cd6e35ab-7786-4cac-a227-cccee4b5645d"",
+                    ""path"": ""<Keyboard>/e"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""interact"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -305,6 +325,7 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         m_player_look = m_player.FindAction("look", throwIfNotFound: true);
         m_player_jump = m_player.FindAction("jump", throwIfNotFound: true);
         m_player_nextDialogue = m_player.FindAction("nextDialogue", throwIfNotFound: true);
+        m_player_interact = m_player.FindAction("interact", throwIfNotFound: true);
     }
 
     ~@PlayerInput()
@@ -390,6 +411,7 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
     private readonly InputAction m_player_look;
     private readonly InputAction m_player_jump;
     private readonly InputAction m_player_nextDialogue;
+    private readonly InputAction m_player_interact;
     /// <summary>
     /// Provides access to input actions defined in input action map "player".
     /// </summary>
@@ -421,6 +443,10 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "player/nextDialogue".
         /// </summary>
         public InputAction @nextDialogue => m_Wrapper.m_player_nextDialogue;
+        /// <summary>
+        /// Provides access to the underlying input action "player/interact".
+        /// </summary>
+        public InputAction @interact => m_Wrapper.m_player_interact;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -462,6 +488,9 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
             @nextDialogue.started += instance.OnNextDialogue;
             @nextDialogue.performed += instance.OnNextDialogue;
             @nextDialogue.canceled += instance.OnNextDialogue;
+            @interact.started += instance.OnInteract;
+            @interact.performed += instance.OnInteract;
+            @interact.canceled += instance.OnInteract;
         }
 
         /// <summary>
@@ -488,6 +517,9 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
             @nextDialogue.started -= instance.OnNextDialogue;
             @nextDialogue.performed -= instance.OnNextDialogue;
             @nextDialogue.canceled -= instance.OnNextDialogue;
+            @interact.started -= instance.OnInteract;
+            @interact.performed -= instance.OnInteract;
+            @interact.canceled -= instance.OnInteract;
         }
 
         /// <summary>
@@ -563,5 +595,12 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnNextDialogue(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "interact" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnInteract(InputAction.CallbackContext context);
     }
 }
