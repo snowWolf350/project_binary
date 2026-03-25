@@ -104,7 +104,7 @@ public class Player : MonoBehaviour
 
     private void Update()
     {
-        if (!GameManager.Instance.GameIsPlaying())
+        if (!GameManager.Instance.GameIsPlaying() && !GameManager.Instance.GameIsCameraPan())
         {
             _animator.SetBool("isWalking", false);
             return;
@@ -115,7 +115,7 @@ public class Player : MonoBehaviour
     }
     private void LateUpdate()
     {
-        if (!GameManager.Instance.GameIsPlaying())
+        if (!GameManager.Instance.GameIsPlaying() && !GameManager.Instance.GameIsCameraPan())
         {
             return;
         }

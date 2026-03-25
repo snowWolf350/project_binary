@@ -9,25 +9,33 @@ public class Interact : MonoBehaviour
     [SerializeField] TextMeshProUGUI interactText;
     [SerializeField] GameObject interactUI;
 
+    bool lookAtPlayer;
     public UnityEvent onInteraction;
 
     private void Start()
     {
         Hide();
     }
+    private void LateUpdate()
+    {
+        if (lookAtPlayer == false) return;
+        Vector3 lookDirection = transform.position - Camera.main.transform.position;
+        interactUI.transform.rotation = Quaternion.LookRotation(lookDirection, Vector3.up);
+    }
     public void Interacttion()
     {
-        Debug.Log("Interacted");
         onInteraction.Invoke();
     }
 
     private void OnTriggerEnter(Collider other)
     {
+        lookAtPlayer = true;
         Show();
         Player.Instance.SetCurrentInteractable(this);
     }
     private void OnTriggerExit(Collider other)
     {
+        lookAtPlayer = false;
         Hide(); 
         Player.Instance.SetCurrentInteractable(null);
     }

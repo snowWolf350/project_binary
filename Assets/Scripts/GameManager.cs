@@ -9,6 +9,7 @@ public class GameManager : MonoBehaviour
         playing,
         dialogue,
         cutscene,
+        cameraPan,
         paused,
     }
 
@@ -33,6 +34,10 @@ public class GameManager : MonoBehaviour
     {
         return _currentGameState == gameState.dialogue;
     }
+    public bool GameIsCameraPan()
+    {
+        return _currentGameState == gameState.cameraPan;
+    }
 
     public void SetGameIsDialogue()
     {
@@ -41,5 +46,13 @@ public class GameManager : MonoBehaviour
     public void SetGameIsPlaying()
     {
         _currentGameState = gameState.playing;
+    }
+    public void SetGameIsCameraPan()
+    {
+        _currentGameState = gameState.cameraPan;
+    }
+    public void SetGameIsCutscene()
+    {
+        _currentGameState = gameState.cutscene;
     }
 }
