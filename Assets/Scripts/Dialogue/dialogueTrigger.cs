@@ -21,7 +21,7 @@ public class dialogueTrigger : MonoBehaviour
 
         }
         GameManager.Instance.SetGameIsPlaying();
-        Destroy(gameObject);
+        //Destroy(gameObject);
     }
 
     private void OnTriggerEnter(Collider other)

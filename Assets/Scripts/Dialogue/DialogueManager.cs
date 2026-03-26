@@ -11,8 +11,10 @@ public class DialogueManager : MonoBehaviour
     [SerializeField] TextMeshProUGUI _nameText;
     [SerializeField] TextMeshProUGUI _dialougeText;
     [SerializeField] Image _characterImage;
-    [SerializeField] Image _speakerImage;
-    [SerializeField] Animator _animator;
+    [SerializeField] Image _particleImage;
+    [SerializeField] Animator _dialogueBoxAnimator;
+    [SerializeField] Animator _characterAnimator;
+    [SerializeField] Transform characterImage;
     bool _dialogueon;
     bool _dialogueDone = false;
     float _typingSpeed = 0.02f;
@@ -41,11 +43,14 @@ public class DialogueManager : MonoBehaviour
     {
         _dialogueDone = false; // reset when a new dialogue starts
         _dialogueon = true;
-        _animator.SetBool("isOpen", true);
+        _dialogueBoxAnimator.SetBool("isOpen", true);
+        _characterAnimator.SetTrigger("newDialogue");
 
         _nameText.text = dialouge.speakerName;
         _characterImage.sprite = dialouge.speakerImage;
         _sentencesQueue.Clear();
+
+        StartCoroutine((animateCharacter()));
 
         foreach (string sentence in dialouge.speakerText)
         {
@@ -57,7 +62,7 @@ public class DialogueManager : MonoBehaviour
 
     void endDialouge()
     {
-        _animator.SetBool("isOpen", false);
+        _dialogueBoxAnimator.SetBool("isOpen", false);
         _dialogueon = false;
         _dialogueDone = true; // signal that this dialogue is done
     }
@@ -73,7 +78,7 @@ public class DialogueManager : MonoBehaviour
                 return;
             }
             string sentence = _sentencesQueue.Dequeue();
-            StopAllCoroutines();
+            StopCoroutine(typeSentence(null));
             StartCoroutine(typeSentence(sentence)); 
     }
 
@@ -85,6 +90,33 @@ public class DialogueManager : MonoBehaviour
             _dialougeText.text += letter;
             yield return new WaitForSeconds(_typingSpeed);
         }
+    }
+
+    IEnumerator animateCharacter()
+    {
+        Vector3 startScale = new Vector3(0.8f, 0.8f, 0.8f);
+        Vector3 endScale = new Vector3(1.2f, 1.2f, 1.2f);
+        characterImage.transform.localScale = startScale;
+        float animationDuration = 0.1f;
+        float timer = 0;
+        while (timer/animationDuration < 1)
+        {
+            characterImage.transform.localScale = Vector3.Lerp(startScale, endScale, timer);
+            yield return null;
+            timer += Time.deltaTime;
+        }
+        characterImage.transform.localScale = endScale;
+
+        startScale = new Vector3(1.2f, 1.2f, 1.2f);
+        endScale = Vector3.one;
+        timer = 0;
+        while (timer/animationDuration < 1)
+        {
+            characterImage.transform.localScale = Vector3.Lerp(startScale, endScale, timer);
+            yield return null;
+            timer += Time.deltaTime;
+        }
+        characterImage.transform.localScale = endScale;
     }
 
     public bool DialogueIsDone()
