@@ -75,8 +75,6 @@ public class Player : MonoBehaviour
     private bool rotateOnMove = true;
     [SerializeField] Animator _animator;
 
-    Interact _currentInteractable;
-
 
     // timeout deltatime
     private float _jumpTimeoutDelta;
@@ -99,7 +97,6 @@ public class Player : MonoBehaviour
         _gameInput = GameInput.Instance;
 
         _gameInput.onPlayerJumped += _gameInput_onPlayerJumped;
-        _gameInput.onPlayerInteract += _gameInput_onPlayerInteract;
     }
 
     private void Update()
@@ -285,17 +282,5 @@ public class Player : MonoBehaviour
     }
     #endregion
 
-    public void SetCurrentInteractable(Interact interact)
-    {
-        _currentInteractable = interact;
-    }
-
-    private void _gameInput_onPlayerInteract(object sender, System.EventArgs e)
-    {
-        if(_currentInteractable == null) return;
-        if (!GameManager.Instance.GameIsPlaying()) return;
-
-        _currentInteractable.Interacttion();
-    }
-
+  
 }
