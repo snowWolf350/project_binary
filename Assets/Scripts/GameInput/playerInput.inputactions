@@ -59,6 +59,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "hack",
+                    "type": "Button",
+                    "id": "74f5a747-3cd0-46b4-8ecd-8285e1fe9e94",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -224,6 +233,17 @@
                     "processors": "",
                     "groups": "",
                     "action": "interact",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "c3ddfbab-f6ac-4a1c-b28b-97805a8f5e61",
+                    "path": "<Keyboard>/q",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "hack",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

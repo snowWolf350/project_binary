@@ -145,6 +145,15 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""hack"",
+                    ""type"": ""Button"",
+                    ""id"": ""74f5a747-3cd0-46b4-8ecd-8285e1fe9e94"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -312,6 +321,17 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                     ""action"": ""interact"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""c3ddfbab-f6ac-4a1c-b28b-97805a8f5e61"",
+                    ""path"": ""<Keyboard>/q"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""hack"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -326,6 +346,7 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         m_player_jump = m_player.FindAction("jump", throwIfNotFound: true);
         m_player_nextDialogue = m_player.FindAction("nextDialogue", throwIfNotFound: true);
         m_player_interact = m_player.FindAction("interact", throwIfNotFound: true);
+        m_player_hack = m_player.FindAction("hack", throwIfNotFound: true);
     }
 
     ~@PlayerInput()
@@ -412,6 +433,7 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
     private readonly InputAction m_player_jump;
     private readonly InputAction m_player_nextDialogue;
     private readonly InputAction m_player_interact;
+    private readonly InputAction m_player_hack;
     /// <summary>
     /// Provides access to input actions defined in input action map "player".
     /// </summary>
@@ -447,6 +469,10 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "player/interact".
         /// </summary>
         public InputAction @interact => m_Wrapper.m_player_interact;
+        /// <summary>
+        /// Provides access to the underlying input action "player/hack".
+        /// </summary>
+        public InputAction @hack => m_Wrapper.m_player_hack;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -491,6 +517,9 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
             @interact.started += instance.OnInteract;
             @interact.performed += instance.OnInteract;
             @interact.canceled += instance.OnInteract;
+            @hack.started += instance.OnHack;
+            @hack.performed += instance.OnHack;
+            @hack.canceled += instance.OnHack;
         }
 
         /// <summary>
@@ -520,6 +549,9 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
             @interact.started -= instance.OnInteract;
             @interact.performed -= instance.OnInteract;
             @interact.canceled -= instance.OnInteract;
+            @hack.started -= instance.OnHack;
+            @hack.performed -= instance.OnHack;
+            @hack.canceled -= instance.OnHack;
         }
 
         /// <summary>
@@ -602,5 +634,12 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnInteract(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "hack" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnHack(InputAction.CallbackContext context);
     }
 }

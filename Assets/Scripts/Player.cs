@@ -1,7 +1,5 @@
 using System;
 using UnityEngine;
-using UnityEngine.Windows;
-
 
 public class Player : MonoBehaviour
 {
@@ -81,6 +79,7 @@ public class Player : MonoBehaviour
     Vector3 mouseWorldPosition = Vector3.zero;
     [SerializeField] LayerMask aimLayerMask = new LayerMask();
     [SerializeField] Transform debugTransform;
+    IHackable _currentHackable;
 
 
     // timeout deltatime
@@ -104,7 +103,9 @@ public class Player : MonoBehaviour
         _gameInput = GameInput.Instance;
 
         _gameInput.onPlayerJumped += _gameInput_onPlayerJumped;
+        _gameInput.onPlayerHack += _gameInput_onPlayerHack;
     }
+
 
     private void Update()
     {
@@ -119,20 +120,6 @@ public class Player : MonoBehaviour
 
     }
 
-    private void HandleInteractions()
-    {
-        Ray ray = Camera.main.ScreenPointToRay(screenCentrePoint);
-        if (Physics.Raycast(ray, out RaycastHit raycastHit, 999f, aimLayerMask))
-        {
-            mouseWorldPosition = raycastHit.point;
-            Debug.DrawLine(ray.origin,mouseWorldPosition,Color.red);
-            debugTransform.position = raycastHit.point;
-            if (raycastHit.transform.TryGetComponent(out Hackable hackable))
-            {
-                hackable.interact();
-            }
-        }
-    }
 
     private void LateUpdate()
     {
@@ -307,5 +294,31 @@ public class Player : MonoBehaviour
     }
     #endregion
 
-  
+    #region |---Interaction---|
+    private void HandleInteractions()
+    {
+        Ray ray = Camera.main.ScreenPointToRay(screenCentrePoint);
+        if (Physics.Raycast(ray, out RaycastHit raycastHit, 999f, aimLayerMask))
+        {
+            mouseWorldPosition = raycastHit.point;
+            Debug.DrawLine(ray.origin, mouseWorldPosition, Color.red);
+            debugTransform.position = raycastHit.point;
+            if (raycastHit.transform.TryGetComponent(out IHackable hackable))
+            {
+                _currentHackable = hackable;
+            }
+            else
+            {
+                _currentHackable = null;
+            }
+        }
+    }
+    private void _gameInput_onPlayerHack(object sender, EventArgs e)
+    {
+        if (_currentHackable == null) return;
+
+        _currentHackable.Interact();
+    }
+    #endregion
+
 }
