@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.Windows;
 
@@ -75,6 +76,12 @@ public class Player : MonoBehaviour
     private bool rotateOnMove = true;
     [SerializeField] Animator _animator;
 
+    //aiming
+    Vector2 screenCentrePoint = new Vector2(Screen.width / 2, Screen.height / 2);
+    Vector3 mouseWorldPosition = Vector3.zero;
+    [SerializeField] LayerMask aimLayerMask = new LayerMask();
+    [SerializeField] Transform debugTransform;
+
 
     // timeout deltatime
     private float _jumpTimeoutDelta;
@@ -109,7 +116,24 @@ public class Player : MonoBehaviour
             Move();
             GroundedCheck();
             JumpAndGravity();
+
     }
+
+    private void HandleInteractions()
+    {
+        Ray ray = Camera.main.ScreenPointToRay(screenCentrePoint);
+        if (Physics.Raycast(ray, out RaycastHit raycastHit, 999f, aimLayerMask))
+        {
+            mouseWorldPosition = raycastHit.point;
+            Debug.DrawLine(ray.origin,mouseWorldPosition,Color.red);
+            debugTransform.position = raycastHit.point;
+            if (raycastHit.transform.TryGetComponent(out Hackable hackable))
+            {
+                hackable.interact();
+            }
+        }
+    }
+
     private void LateUpdate()
     {
         if (!GameManager.Instance.GameIsPlaying() && !GameManager.Instance.GameIsCameraPan())
@@ -117,6 +141,7 @@ public class Player : MonoBehaviour
             return;
         }
         CameraRotation();
+        HandleInteractions();
     }
     #region |---Movement---|
     private void Move()
