@@ -80,6 +80,11 @@ public class Player : MonoBehaviour
     [SerializeField] LayerMask aimLayerMask = new LayerMask();
     [SerializeField] Transform debugTransform;
     IHackable _currentHackable;
+    public static event EventHandler<OnHackableChangedEventArgs> OnHackableChanged;
+    public class OnHackableChangedEventArgs : EventArgs
+    {
+        public IHackable hackable;
+    }
 
 
     // timeout deltatime
@@ -305,13 +310,22 @@ public class Player : MonoBehaviour
             debugTransform.position = raycastHit.point;
             if (raycastHit.transform.TryGetComponent(out IHackable hackable))
             {
-                _currentHackable = hackable;
-            }
-            else
-            {
-                _currentHackable = null;
+                setInteractable(hackable);
             }
         }
+        else
+        {
+            setInteractable(null);
+        }
+    }
+    void setInteractable(IHackable hackable)
+    {
+        if (_currentHackable == hackable) return;
+        _currentHackable = hackable;
+        OnHackableChanged?.Invoke(this, new OnHackableChangedEventArgs
+        {
+            hackable = hackable,
+        });
     }
     private void _gameInput_onPlayerHack(object sender, EventArgs e)
     {
