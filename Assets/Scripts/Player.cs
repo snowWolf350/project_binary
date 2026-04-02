@@ -318,6 +318,10 @@ public class Player : MonoBehaviour
             setInteractable(null);
         }
     }
+    public IHackable GetCurrentHackable()
+    {
+        return _currentHackable;
+    }
     void setInteractable(IHackable hackable)
     {
         if (_currentHackable == hackable) return;

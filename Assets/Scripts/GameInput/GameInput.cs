@@ -1,19 +1,22 @@
 using System;
 using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class GameInput : MonoBehaviour
+public class GameInput : MonoBehaviour,IHasProgress
 {
     public static GameInput Instance;
 
     public event EventHandler onPlayerJumped;
     public event EventHandler onPlayerInteract;
     public event EventHandler onPlayerHack;
+    public event EventHandler<IHasProgress.onProgressChangedEventArgs> onProgressChanged;
 
     PlayerInput _playerInput;
 
-    float _keyHeldTime = 1;
+    float _keyHeldMax = 1;
+    float _keyHeldTimer = 0;
 
     bool _isSprinting;
     bool _hackHeldDown;
@@ -50,6 +53,11 @@ public class GameInput : MonoBehaviour
     private void Hack_canceled(InputAction.CallbackContext obj)
     {
         _hackHeldDown = false;
+        _keyHeldTimer = 0;
+        onProgressChanged?.Invoke(this, new IHasProgress.onProgressChangedEventArgs
+        {
+            progressNormalized = _keyHeldTimer / _keyHeldMax
+        });
     }
 
     private void Hack_performed(InputAction.CallbackContext obj)
@@ -60,13 +68,18 @@ public class GameInput : MonoBehaviour
     IEnumerator holdKey()
     {
         _hackHeldDown = true;
-        float timer = 0;
+        _keyHeldTimer = 0;
         while (_hackHeldDown)
         {
             if (_hackHeldDown == false) break;
-            timer += Time.deltaTime;
+            if (Player.Instance.GetCurrentHackable() == null) break;
+            _keyHeldTimer += Time.deltaTime;
+            onProgressChanged?.Invoke(this, new IHasProgress.onProgressChangedEventArgs
+            {
+                progressNormalized = _keyHeldTimer / _keyHeldMax
+            });
             yield return null;
-            if (timer > _keyHeldTime)
+            if (_keyHeldTimer > _keyHeldMax)
             {
                 _hackHeldDown = false;
                 onPlayerHack?.Invoke(this, EventArgs.Empty);
