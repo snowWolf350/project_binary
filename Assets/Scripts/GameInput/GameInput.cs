@@ -23,10 +23,22 @@ public class GameInput : MonoBehaviour,IHasProgress
 
     private void Awake()
     {
-        _playerInput = new PlayerInput();
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+
         Instance = this;
+        DontDestroyOnLoad(gameObject);
+
+        _playerInput = new PlayerInput();
     }
 
+    private void Start()
+    {
+        Cursor.lockState = CursorLockMode.Locked;
+    }
     private void OnEnable()
     {
         _playerInput.player.move.Enable();
@@ -36,10 +48,7 @@ public class GameInput : MonoBehaviour,IHasProgress
         _playerInput.player.nextDialogue.Enable();
         _playerInput.player.interact.Enable();
         _playerInput.player.hack.Enable();
-    }
 
-    private void Start()
-    {
         _playerInput.player.sprint.performed += Sprint_performed;
         _playerInput.player.sprint.canceled += Sprint_canceled;
         _playerInput.player.jump.performed += Jump_performed;
@@ -47,7 +56,6 @@ public class GameInput : MonoBehaviour,IHasProgress
         _playerInput.player.interact.performed += Interact_performed;
         _playerInput.player.hack.performed += Hack_performed;
         _playerInput.player.hack.canceled += Hack_canceled;
-        Cursor.lockState = CursorLockMode.Locked;
     }
 
     private void Hack_canceled(InputAction.CallbackContext obj)
@@ -127,5 +135,22 @@ public class GameInput : MonoBehaviour,IHasProgress
     public bool PlayerIsSprinting()
     {
         return _isSprinting;
+    }
+
+    private void OnDestroy()
+    {
+        if (_playerInput != null)
+        {
+            _playerInput.player.sprint.performed -= Sprint_performed;
+            _playerInput.player.sprint.canceled -= Sprint_canceled;
+            _playerInput.player.jump.performed -= Jump_performed;
+            _playerInput.player.nextDialogue.performed -= NextDialogue_performed;
+            _playerInput.player.interact.performed -= Interact_performed;
+            _playerInput.player.hack.performed -= Hack_performed;
+            _playerInput.player.hack.canceled -= Hack_canceled;
+        }
+
+        if (Instance == this)
+            Instance = null;
     }
 }
