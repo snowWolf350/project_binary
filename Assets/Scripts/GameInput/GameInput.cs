@@ -30,7 +30,6 @@ public class GameInput : MonoBehaviour,IHasProgress
         }
 
         Instance = this;
-        DontDestroyOnLoad(gameObject);
 
         _playerInput = new PlayerInput();
     }

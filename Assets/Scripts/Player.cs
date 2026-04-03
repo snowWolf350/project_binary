@@ -76,11 +76,10 @@ public class Player : MonoBehaviour
 
     //aiming
     Vector2 screenCentrePoint = new Vector2(Screen.width / 2, Screen.height / 2);
-    Vector3 mouseWorldPosition = Vector3.zero;
-    [SerializeField] LayerMask aimLayerMask = new LayerMask();
     [SerializeField] Transform debugTransform;
     IHackable _currentHackable;
     public static event EventHandler<OnHackableChangedEventArgs> OnHackableChanged;
+    float _interactDistance = 25f;
     public class OnHackableChangedEventArgs : EventArgs
     {
         public IHackable hackable;
@@ -303,19 +302,16 @@ public class Player : MonoBehaviour
     private void HandleInteractions()
     {
         Ray ray = Camera.main.ScreenPointToRay(screenCentrePoint);
-        if (Physics.Raycast(ray, out RaycastHit raycastHit, 999f, aimLayerMask))
+        if (Physics.Raycast(ray, out RaycastHit raycastHit, _interactDistance))
         {
-            mouseWorldPosition = raycastHit.point;
-            Debug.DrawLine(ray.origin, mouseWorldPosition, Color.red);
-            debugTransform.position = raycastHit.point;
             if (raycastHit.transform.TryGetComponent(out IHackable hackable))
             {
                 setInteractable(hackable);
             }
-        }
-        else
-        {
-            setInteractable(null);
+            else
+            {
+                setInteractable(null);
+            }
         }
     }
     public IHackable GetCurrentHackable()
