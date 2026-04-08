@@ -151,5 +151,7 @@ public class GameInput : MonoBehaviour,IHasProgress
 
         if (Instance == this)
             Instance = null;
+
+        _playerInput.Disable();
     }
 }
