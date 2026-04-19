@@ -10,3 +10,5 @@ Things i learnt makng this :
 <img src = "images/char.png" width = "100"> <br>
 3. Cutscenne managment -<br>
 <img src = "images/cutscene.png" width = "400"> <br>
+4. Collaborating with others - <br>
+I asked a friend to make music for me so i had to set up unity in his laptop so we could work on the same project.
